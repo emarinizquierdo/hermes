@@ -1,0 +1,114 @@
+/* app css stylesheet */
+
+body {
+  text-align: justify;
+  margin:40px;
+}
+
+.wrapperCarousel {
+  width: 440px;
+  height: 266px;
+  margin: 20px 0;
+  border-top: solid 10px black;
+  border-bottom: solid 10px black;
+}
+
+.wrapperSlidder {
+  width: 400px;
+  height: 266px;
+  float: left;  
+  overflow: hidden;
+  background-color: black;
+}
+
+.photoSlidder {
+  width: 10000px;
+}
+
+.photoItem {
+  float:left;
+  width:400px;
+}
+
+.leftButton {
+  width: 20px;
+  height: 266px;
+  float: left;
+  background-color: black;
+  cursor: pointer;
+}
+
+.leftButton:hover {
+  background-color: rgb(90, 90, 90);
+}
+
+.leftButton li {
+  margin: 126px 0 0 3px;
+}
+
+.rightButton {
+  width: 20px;
+  height: 266px;
+  float: left;
+  background-color: black;
+  cursor: pointer;
+}
+
+.rightButton:hover {
+  background-color: rgb(90, 90, 90);
+}
+
+.rightButton li {
+  margin: 126px 0 0 3px;
+}
+
+.photoTitle {
+  width: 360px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 12px;
+  height: 18px;
+  position: relative;
+  z-index: 3;
+  color: white;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  margin-left: 20px;
+  margin-top: 208px;
+}
+
+.photoTitle p {
+  text-align: left;
+
+}
+
+.galleryIds code {
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+#loader {
+  width: 400px;
+  height: 2660px;
+  background-color: black;
+}
+
+#loader .wrapperImg {
+  width: 24px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 120px;
+}
+
+#loader img {
+  width: 24px;
+}
+
+#warning {
+  width: 100%;
+  height: 100%;
+  color: rgb(216, 126, 126);
+  padding-top: 50px;
+  text-align: center;
+}

@@ -1,0 +1,22 @@
+<div ng-controller="CarouselController" >
+	<div class="wrapperCarousel" >
+		<div class="leftButton" ng-click="leftClick()" ><li class="icon-chevron-left icon-white"></li></div>
+		<div class="wrapperSlidder" >
+			<div id="warning" ng-show="warning">I'm sorry: {{warningNoConnection}}</div>
+			<div id="loader" ng-show="loaded"><div class="wrapperImg"><img src="aui/carousel/pix/loading_gif.gif" /></div></div>
+			<div class="photoSlidder" id="slidder">
+				<div photo-item ng-repeat="photo in photos" class="photoItem"></div>
+			</div>
+		</div>
+		<div class="photoTitle" ng-show="!warning" ng-bind-html-unsafe="photoTitle"></div>
+		<div class="rightButton" ng-click="rightClick()" ><li class="icon-chevron-right icon-white"></li></div>
+	</div>
+	<label>Gallery Id: </label><input ng-change="CallToFlickr(galleryId)" ng-model="galleryId" type="text" placeholder="Ignacio Izquierdo Gallery"></input>
+	<div class="galleryIds">	
+		<h4>Other photosets:</h4>
+		<code ng-click="galleryId = '72157602340001045'; CallToFlickr(galleryId)" >72157602340001045</code><br/><br/>
+		<code ng-click="galleryId = '72157614920145767'; CallToFlickr(galleryId)" >72157614920145767</code><br/><br/>
+		<code ng-click="galleryId = '72157627934092497'; CallToFlickr(galleryId)" >72157627934092497</code><br/><br/>
+		<code ng-click="galleryId = '72157625627436865'; CallToFlickr(galleryId)" >72157625627436865</code><br/><br/>
+	</div>
+</div>

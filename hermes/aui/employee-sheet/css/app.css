@@ -1,0 +1,10 @@
+/* app css stylesheet */
+
+body {
+  text-align: justify;
+  margin:40px;
+}
+
+.ff-search-input {
+  float : right !important;
+}

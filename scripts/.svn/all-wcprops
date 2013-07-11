@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 26
+/hermes/!svn/ver/6/scripts
+END
+web-server.js
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/hermes/!svn/ver/6/scripts/web-server.js
+END
+e2e-test.bat
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/hermes/!svn/ver/1/scripts/e2e-test.bat
+END
+e2e-test.sh
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/hermes/!svn/ver/1/scripts/e2e-test.sh
+END
+test.bat
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/hermes/!svn/ver/1/scripts/test.bat
+END
+test.sh
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/hermes/!svn/ver/1/scripts/test.sh
+END
+webServerExpress.js
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/hermes/!svn/ver/1/scripts/webServerExpress.js
+END
+watchr.rb
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/hermes/!svn/ver/1/scripts/watchr.rb
+END

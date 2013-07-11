@@ -1,0 +1,37 @@
+
+<h4>Devices</h4>
+
+<div class="well" ng-controller="devicesTableController">
+  <form name="deviceTable">
+    <table class="table">
+      <thead>
+        <tr >
+          <th>#</th>
+          <th>Name</th>
+          <th>Identifiation</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="error" ng-repeat="device in devices" ng-show="!loadingDevicesTable">
+          <td>{{$index}}</td>
+          <td>{{device.name}}</td>
+          <td>{{device.id}}</td>
+          <td>{{device.state}}</td>
+          <td class="lastColumn" ><i class="icon-remove icon-red" ng-click="removeDevice(device.number)" ></i></td>
+        </tr>
+        <tr ng-show="!loadingDevicesTable">
+          <td ng-model="newDeviceNumber"></td>
+          <td><input type="text" class="input-medium" ng-class="{transparentInput : !addNewDevice }"  ng-model="newDeviceName" ng-click="addNewDevice = true"></input></td>
+          <td><input type="text" class="input-medium" ng-class="{transparentInput : !addNewDevice }" ng-model="newDeviceId" ng-click="addNewDevice = true" required integer ></input></td>
+          <td><input type="text" class="input-medium" ng-class="{transparentInput : !addNewDevice }" ng-model="newDeviceState" ng-click="addNewDevice = true"></input></td>
+          <td class="lastColumn" ><i class="icon-blue icon-plus" ng-show="!addNewDevice" ng-click="addNewDevice = true"></i><i class="icon-green icon-ok" ng-show="addNewDevice" ng-click="acceptNewDevice()"></i><i class="icon-red icon-minus-sign" ng-show="addNewDevice" ng-click="cancelNewDevice()"></i></td>
+        </tr>
+        <tr ng-show="loadingDevicesTable">
+          <td colspan="5" class="loadingTable" >loading...</td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+

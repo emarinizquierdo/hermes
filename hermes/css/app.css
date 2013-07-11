@@ -1,0 +1,82 @@
+/* app css stylesheet */
+
+body {
+  text-align: justify;
+  min-width: 941px;
+  max-width: 941px;
+}
+
+.navbar .container {
+  width: auto !important;
+}
+
+.appNavbar {
+  margin-bottom: 15px;
+}
+
+.viewWrapper {
+  padding: 60px;
+  margin-bottom: 30px;
+  color: inherit;
+  background-color: #eee;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+
+.modalSmall {
+	width : 300px;
+	margin-left : -150px;
+}
+
+.lastColumn {
+  text-align: right !important;
+  width: 40px;
+}
+
+.lastColumn .icon-red{
+  margin-left: 6px;
+}
+
+.transparentInput {
+  border: 1px solid rgb(228, 228, 228) !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.loadingTable {
+  text-align : center !important;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.margin-right-profile { 
+  margin-right: 20px;
+}
+
+.margin-right-profile .dropdown-menu {
+  text-align: left;
+}
+
+.icon-green {
+  color: rgb(31, 145, 31);
+}
+
+.icon-red {
+  color: rgb(184, 57, 57);
+}
+
+.icon-blue {
+  color: rgb(62, 103, 230);
+}
+
+.ng-invalid-integer {
+    border-color: red !important;
+}
+
+.well {
+  background-color: rgb(255, 255, 255) !important;
+}

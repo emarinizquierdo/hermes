@@ -1,0 +1,6 @@
+[	  { "name" : "BBVA", "path" : "#/internals" }
+	, { "name" : "Externals", "path" : "#/externals" }
+	, { "name" : "Agencies", "path" : "#/offices" }
+	, { "name" : "Organizational units", "path" : "#/ous" }
+	, { "name" : "Support centers", "path" : "#/spcs" }
+]

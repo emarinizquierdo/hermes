@@ -1,0 +1,38 @@
+<div class="person empleado" id="personEmpleado">
+      <div id="idtoggle" class="toggle">
+        <p><a href="#">Open / Close</a></p>
+      </div>
+      <div class="avatar">
+          <img id="foto" src="pix/common/default_avatar_male_big.png" alt="">
+          <ul>
+              <li id="estadoConexion"><a href="#" id="linkConexion"></a></li>
+              <li id="cumple" class="birthday">Today is her birthday</li>
+          </ul>
+      </div>
+      
+      	<div class="zoom">
+        	<img id="ampliada" src="pix/common/default_avatar_male_big.png" alt="" style="display: none;">
+        </div>
+
+      	<div id="contacto" class="contact_data">
+		  <h4 id="nombreDevuelto" class="capitalize">{{employeeData.APELLIDO1}} {{employeeData.APELLIDO2}}, {{employeeData.APELLIDO1}}</h4>
+		  <h5 id="unidad">{{employeeData.CENTROTRABAJO}} - {{employeeData.DES_CARGO}}</h5>
+		  <ul class="contact_lines" id="listaDevuelta" data-id="contact-lines">
+		      <li id="listaMailDevuelta"><a href="#" id="mailDevuelto" class="lowercase">{{employeeData.EMAIL}}</a></li>
+		      <li id="listaCodigoDevuelto">{{employeeData.COD_USUARIO}} - {{employeeData.COD_CORPORATIVO}}</li>
+		      
+		      <li id="listaTelefonoFijo">{{employeeData.TELEFONOFIJOLARGO}}</li>
+		      
+		  </ul>
+		  <p class="slot" id="uOrgDevuelta"></p>
+		  <ul class="user_action">
+		      <!--li id="video" class="video disabled"><a href="#">Realizar videollamada</a></li-->             
+		      <li id="email" class="email"><a id="email" href="#">{{employeeData.EMAIL}}</a></li>
+		      <!--li id="phone" class="phone"><a href="#">Realizar llamada</a></li-->
+		  </ul>
+		</div>
+      
+	<div class="contact_extend">
+		<div data-id="fichaTecnicaEmp" id="fichaTecnicaEmp"></div>
+	</div>
+</div>

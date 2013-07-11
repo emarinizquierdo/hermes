@@ -1,0 +1,6 @@
+<ul class="nav nav-tabs" ng-controller="MenuController">
+<li ng-repeat="item in items"  ng-class="{ active : isActive(item.path) }" >
+  <a href="{{item.path}}">{{item.name}}</a>
+</li>
+<li class="ff-search-input" ><input type="text" ng-model="GlobalData.inputSearch" ></input></li>
+</ul>
