@@ -1,7 +1,7 @@
 'use strict';
 
 //var _URL = "http://localhost";
-var _URL = "http://ec2-54-245-144-170.us-west-2.compute.amazonaws.com";
+var _URL = "http://ec2-54-218-141-96.us-west-2.compute.amazonaws.com";
 
 /* Services */
 angular.module("Services",[])
