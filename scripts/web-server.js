@@ -54,8 +54,12 @@ HttpServer.prototype.start = function(port) {
      console.log((new Date()) + ' Connection accepted.');
      
      connection.on('message', function(message){
-        console.log('message received');
-        connection.sendUTF(message);
+	if (message.type === 'utf8') { // accept only text
+             //get data object from message         
+var data = message.utf8Data;
+	} 
+      console.log('message received: '+data);
+        connection.sendUTF(data);
      });
 
      connection.on('close', function(connection){
@@ -357,7 +361,17 @@ function POSTHandler(req, res){
         }
       
       });
+     }else if(parameters.arduwebsocket){
+        console.log(parameters.message);
+	  headers = [];
+          headers.push(["Connection", "close"]);
+          headers.push(["Content-Type", "application/json"]);
+	  res.writeHead(200, "OK", headers);
+          var aux = { "state" : "ok" };
+          res.end(JSON.stringify(aux));
+
     }
+
   }
 
 }
