@@ -5,7 +5,7 @@ var  clients = [];
 
 exports.Handler = function(p_server ){  
   
-  wsServer = new webSocketServer({httpServer:p_server, keepalive:true, keepaliveInterval: 10000});
+  wsServer = new webSocketServer({httpServer:p_server, keepalive:false});
   
   wsServer.on('request', function(request){
     
