@@ -19,7 +19,7 @@ exports.Handler = function(p_server ){
         //get data object from message         
   		    var data = message.utf8Data;
       }
-      console.log('message received: '+data);
+      console.log('message received: ' + data);
       connection.sendUTF(data);
     });
     

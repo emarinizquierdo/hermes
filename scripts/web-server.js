@@ -297,9 +297,8 @@ function POSTHandler(req, res){
     for(var i=0; i< temp_parameters.length; i++){
       var auxKeyValue = temp_parameters[i].split("=");
       parameters[auxKeyValue[0]] = auxKeyValue[1] ;
-      go_on(parameters);
     }
-    
+    go_on(parameters);
   });
   
   function go_on(parameters){
@@ -348,13 +347,15 @@ function POSTHandler(req, res){
       });
     }else if(parameters.arduwebsocket){
       console.log(parameters.message);
-   	  headers = [];
+   	 headers = [];
       headers.push(["Connection", "close"]);
       headers.push(["Content-Type", "application/json"]);
-   	  res.writeHead(200, "OK", headers);
+   	 res.writeHead(200, "OK", headers);
       var aux = { "state" : "ok" };
       res.end(JSON.stringify(aux));
+      
       arduWebSocket.SendMessage(parameters.message);
+      
     }
     
   }
