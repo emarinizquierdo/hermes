@@ -6,7 +6,9 @@ var util = require('util'),
     url = require('url'),
     events = require('events'),
     Firebase = require('firebase'),
-    webSocketServer = require('websocket').server;
+//    webSocketServer = require('websocket').server,
+    arduWebSocket = require('./arduwebsocket.js');
+    
 
 var DEFAULT_PORT = 80;
 
@@ -46,7 +48,9 @@ HttpServer.prototype.start = function(port) {
   this.port = port;
   this.server.listen(port);
   util.puts('Http Server running at http://localhost:' + port + '/');
-  wsServer = new webSocketServer({httpServer:this.server});
+  
+  arduWebSocket.Handler(this.server);
+/*  wsServer = new webSocketServer({httpServer:this.server});
 
   wsServer.on('request', function(request){
      console.log((new Date()) + ' Connection from origin ' + request.origin + '.');
@@ -65,7 +69,7 @@ var data = message.utf8Data;
      connection.on('close', function(connection){
         console.log('connection closed');
      });
-  });
+  });*/
 };
 
 HttpServer.prototype.parseUrl_ = function(urlString) {
