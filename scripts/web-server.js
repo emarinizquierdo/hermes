@@ -345,9 +345,8 @@ function POSTHandler(req, res){
         
       });
     }else if(parameters.arduwebsocket){
-      console.log(parameters.message);
-   	 headers = [];
-      headers.push(["Connection", "close"]);
+ 	 headers = [];
+      	headers.push(["Connection", "close"]);
       headers.push(["Content-Type", "application/json"]);
    	 res.writeHead(200, "OK", headers);
       var aux = { "state" : "ok" };

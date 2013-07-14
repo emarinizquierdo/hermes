@@ -31,10 +31,9 @@ exports.Handler = function(p_server ){
 }
 
 exports.SendMessage = function( p_message ){
-  
-  console.log("Sending: " + escapeHtml(p_message));
+  console.log("Sending: " + decodeURI(p_message));
   for (var i=0; i < clients.length; i++) {
-    clients[i].sendUTF( p_message );
+    clients[i].sendUTF( decodeURI(p_message) );
   }
   
 }
