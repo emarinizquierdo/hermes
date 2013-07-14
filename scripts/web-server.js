@@ -1,14 +1,14 @@
 #!/usr/bin/env node
+  
+  var util = require('util'),
+      http = require('http'),
+      fs = require('fs'),
+      url = require('url'),
+      events = require('events'),
+      Firebase = require('firebase'),
+      //    webSocketServer = require('websocket').server,
+      arduWebSocket = require('./arduwebsocket.js');
 
-var util = require('util'),
-    http = require('http'),
-    fs = require('fs'),
-    url = require('url'),
-    events = require('events'),
-    Firebase = require('firebase'),
-//    webSocketServer = require('websocket').server,
-    arduWebSocket = require('./arduwebsocket.js');
-    
 
 var DEFAULT_PORT = 80;
 
@@ -34,11 +34,11 @@ function createServlet(Class) {
 }
 
 /**
- * An Http server implementation that uses a map of methods to decide
- * action routing.
- *
- * @param {Object} Map of method => Handler function
- */
+* An Http server implementation that uses a map of methods to decide
+* action routing.
+*
+* @param {Object} Map of method => Handler function
+*/
 function HttpServer(handlers) {
   this.handlers = handlers;
   this.server = http.createServer(this.handleRequest_.bind(this));
@@ -50,26 +50,7 @@ HttpServer.prototype.start = function(port) {
   util.puts('Http Server running at http://localhost:' + port + '/');
   
   arduWebSocket.Handler(this.server);
-/*  wsServer = new webSocketServer({httpServer:this.server});
 
-  wsServer.on('request', function(request){
-     console.log((new Date()) + ' Connection from origin ' + request.origin + '.');
-     var connection = request.accept(null, request.origin);
-     console.log((new Date()) + ' Connection accepted.');
-     
-     connection.on('message', function(message){
-	if (message.type === 'utf8') { // accept only text
-             //get data object from message         
-var data = message.utf8Data;
-	} 
-      console.log('message received: '+data);
-        connection.sendUTF(data);
-     });
-
-     connection.on('close', function(connection){
-        console.log('connection closed');
-     });
-  });*/
 };
 
 HttpServer.prototype.parseUrl_ = function(urlString) {
@@ -79,13 +60,13 @@ HttpServer.prototype.parseUrl_ = function(urlString) {
 };
 
 HttpServer.prototype.handleRequest_ = function(req, res) {
-
+  
   if (req.method==="PUT" || req.method==="POST") {
     
     POSTHandler(req, res);
-  
+    
   } else{
-
+    
     var logEntry = req.method + ' ' + req.url;
     if (req.headers['user-agent']) {
       logEntry += ' ' + req.headers['user-agent'];
@@ -100,12 +81,12 @@ HttpServer.prototype.handleRequest_ = function(req, res) {
       handler.call(this, req, res);
     }
   }
-
+  
 };
 
 /**
- * Handles static content.
- */
+* Handles static content.
+*/
 function StaticServlet() {}
 
 StaticServlet.MimeMap = {
@@ -127,7 +108,7 @@ StaticServlet.prototype.handleRequest = function(req, res) {
   var path = ('./' + req.url.pathname).replace('//','/').replace(/%(..)/g, function(match, hex){
     return String.fromCharCode(parseInt(hex, 16));
   });
-
+  
   var parts = path.split('/');
   if (parts[parts.length-1].charAt(0) === '.')
     return self.sendForbidden_(req, res, path);
@@ -139,23 +120,23 @@ StaticServlet.prototype.handleRequest = function(req, res) {
     return self.sendFile_(req, res, path);
   });
 }
-
-StaticServlet.prototype.sendError_ = function(req, res, error) {
-  res.writeHead(500, {
+  
+  StaticServlet.prototype.sendError_ = function(req, res, error) {
+    res.writeHead(500, {
       'Content-Type': 'text/html'
-  });
-  res.write('<!doctype html>\n');
-  res.write('<title>Internal Server Error</title>\n');
-  res.write('<h1>Internal Server Error</h1>');
-  res.write('<pre>' + escapeHtml(util.inspect(error)) + '</pre>');
-  util.puts('500 Internal Server Error');
-  util.puts(util.inspect(error));
-};
+    });
+    res.write('<!doctype html>\n');
+    res.write('<title>Internal Server Error</title>\n');
+    res.write('<h1>Internal Server Error</h1>');
+    res.write('<pre>' + escapeHtml(util.inspect(error)) + '</pre>');
+    util.puts('500 Internal Server Error');
+    util.puts(util.inspect(error));
+  };
 
 StaticServlet.prototype.sendMissing_ = function(req, res, path) {
   path = path.substring(1);
   res.writeHead(404, {
-      'Content-Type': 'text/html'
+    'Content-Type': 'text/html'
   });
   res.write('<!doctype html>\n');
   res.write('<title>404 Not Found</title>\n');
@@ -172,7 +153,7 @@ StaticServlet.prototype.sendMissing_ = function(req, res, path) {
 StaticServlet.prototype.sendForbidden_ = function(req, res, path) {
   path = path.substring(1);
   res.writeHead(403, {
-      'Content-Type': 'text/html'
+    'Content-Type': 'text/html'
   });
   res.write('<!doctype html>\n');
   res.write('<title>403 Forbidden</title>\n');
@@ -187,8 +168,8 @@ StaticServlet.prototype.sendForbidden_ = function(req, res, path) {
 
 StaticServlet.prototype.sendRedirect_ = function(req, res, redirectUrl) {
   res.writeHead(301, {
-      'Content-Type': 'text/html',
-      'Location': redirectUrl
+    'Content-Type': 'text/html',
+    'Location': redirectUrl
   });
   res.write('<!doctype html>\n');
   res.write('<title>301 Moved Permanently</title>\n');
@@ -207,7 +188,7 @@ StaticServlet.prototype.sendFile_ = function(req, res, path) {
   var file = fs.createReadStream(path);
   res.writeHead(200, {
     'Content-Type': StaticServlet.
-      MimeMap[path.split('.').pop()] || 'text/plain'
+    MimeMap[path.split('.').pop()] || 'text/plain'
   });
   if (req.method === 'HEAD') {
     res.end();
@@ -232,23 +213,23 @@ StaticServlet.prototype.sendDirectory_ = function(req, res, path) {
   fs.readdir(path, function(err, files) {
     if (err)
       return self.sendError_(req, res, error);
-
+    
     if (!files.length)
       return self.writeDirectoryIndex_(req, res, path, []);
-
+    
     var remaining = files.length;
     var _isIndexHTML = false;
-
-  files.forEach(function(fileName){
-    if(fileName == "index.html"){
-      _isIndexHTML = true;
+    
+    files.forEach(function(fileName){
+      if(fileName == "index.html"){
+        _isIndexHTML = true;
+      }
+    });
+    
+    
+    if(_isIndexHTML){
+      return self.sendRedirect_(req, res, './index.html');
     }
-  });
-
-
-  if(_isIndexHTML){
-    return self.sendRedirect_(req, res, './index.html');
-  }
     files.forEach(function(fileName, index) {
       fs.stat(path + '/' + fileName, function(err, stat) {
         if (err)
@@ -267,7 +248,7 @@ StaticServlet.prototype.writeDirectoryIndex_ = function(req, res, path, files) {
   var self = this;
   path = path.substring(1);
   
-
+  
   res.writeHead(200, {
     'Content-Type': 'text/html'
   });
@@ -286,8 +267,8 @@ StaticServlet.prototype.writeDirectoryIndex_ = function(req, res, path, files) {
   files.forEach(function(fileName) {
     if (fileName.charAt(0) !== '.') {
       res.write('<li><a href="' +
-        escapeHtml(fileName) + '">' +
-        escapeHtml(fileName) + '</a></li>');
+                escapeHtml(fileName) + '">' +
+                escapeHtml(fileName) + '</a></li>');
     }
   });
   res.write('</ol>');
@@ -296,33 +277,33 @@ StaticServlet.prototype.writeDirectoryIndex_ = function(req, res, path, files) {
 
 //POST handler for hermes
 function POSTHandler(req, res){
-
-
+  
+  
   
   util.puts("POST received");
   
   var parameters = {};
-
-    var body = '';
-    req.on('data', function (data) {
-        body += data;
-        if (body.length > 1e6) {
-            // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
-            req.connection.destroy();
-        }
-    });
-    req.on('end', function () {
-        var temp_parameters = body.split("&");
-        for(var i=0; i< temp_parameters.length; i++){
-          var auxKeyValue = temp_parameters[i].split("=");
-          parameters[auxKeyValue[0]] = auxKeyValue[1] ;
-          go_on(parameters);
-        }
-
-    });
-
+  
+  var body = '';
+  req.on('data', function (data) {
+    body += data;
+    if (body.length > 1e6) {
+      // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+      req.connection.destroy();
+    }
+  });
+  req.on('end', function () {
+    var temp_parameters = body.split("&");
+    for(var i=0; i< temp_parameters.length; i++){
+      var auxKeyValue = temp_parameters[i].split("=");
+      parameters[auxKeyValue[0]] = auxKeyValue[1] ;
+      go_on(parameters);
+    }
+    
+  });
+  
   function go_on(parameters){
-
+    
     if(parameters.logout){
       headers = [];
       headers.push(["Connection", "close"]);
@@ -334,24 +315,24 @@ function POSTHandler(req, res){
       res.end(JSON.stringify(aux));
       
     }else if(parameters.login){
-
+      
       var Users = new Firebase('https://hermes.firebaseIO.com/users');
-
+      
       Users.on('value', function(snapshot) { 
         var users = snapshot.val();
         Users.off('value');
         var existUser = false;
-
+        
         for (user in users){
           if(users[user].email == parameters.email && users[user].password == parameters.password ){
             existUser = true;
           }
         };
-
+        
         headers = [];
         headers.push(["Connection", "close"]);
         headers.push(["Content-Type", "application/json"]);
-
+        
         if(!existUser){
           res.writeHead(200, "OK", headers);
           var aux = { "state" : "ko" };
@@ -363,21 +344,21 @@ function POSTHandler(req, res){
           var aux = { "state" : "ok" };
           res.end(JSON.stringify(aux));
         }
-      
+        
       });
-     }else if(parameters.arduwebsocket){
-        console.log(parameters.message);
-	  headers = [];
-          headers.push(["Connection", "close"]);
-          headers.push(["Content-Type", "application/json"]);
-	  res.writeHead(200, "OK", headers);
-          var aux = { "state" : "ok" };
-          res.end(JSON.stringify(aux));
-
+    }else if(parameters.arduwebsocket){
+      console.log(parameters.message);
+   	  headers = [];
+      headers.push(["Connection", "close"]);
+      headers.push(["Content-Type", "application/json"]);
+   	  res.writeHead(200, "OK", headers);
+      var aux = { "state" : "ok" };
+      res.end(JSON.stringify(aux));
+      arduWebSocket.SendMessage();
     }
-
+    
   }
-
+  
 }
 
 // Must be last,

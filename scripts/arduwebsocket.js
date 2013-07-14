@@ -1,14 +1,16 @@
 
 var webSocketServer = require('websocket').server;
 
-exports.Handler = function(p_server ){
-  
-  var wsServer = new webSocketServer({httpServer:p_server});
+var   wsServer = new webSocketServer({httpServer:p_server})
+    , clients = [];
+
+exports.Handler = function(p_server ){  
   
   wsServer.on('request', function(request){
     
     console.log((new Date()) + ' Connection from origin ' + request.origin + '.');
     var connection = request.accept(null, request.origin);
+    var index = clients.push(connection) - 1;
     console.log((new Date()) + ' Connection accepted.');
     
     connection.on('message', function(message){
@@ -25,5 +27,13 @@ exports.Handler = function(p_server ){
     });
     
   });
+}
+
+exports.SendMessage = function( p_message ){
+  
+  for (var i=0; i < clients.length; i++) {
+    clients[i].sendUTF( p_message );
+  }
+  
 }
   
