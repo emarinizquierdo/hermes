@@ -6,7 +6,6 @@
       url = require('url'),
       events = require('events'),
       Firebase = require('firebase'),
-      //    webSocketServer = require('websocket').server,
       arduWebSocket = require('./arduwebsocket.js');
 
 
