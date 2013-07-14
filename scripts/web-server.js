@@ -354,7 +354,7 @@ function POSTHandler(req, res){
    	  res.writeHead(200, "OK", headers);
       var aux = { "state" : "ok" };
       res.end(JSON.stringify(aux));
-      arduWebSocket.SendMessage();
+      arduWebSocket.SendMessage(parameters.message);
     }
     
   }
