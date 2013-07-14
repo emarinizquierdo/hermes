@@ -1,10 +1,11 @@
 
 var webSocketServer = require('websocket').server;
 
-var   wsServer = new webSocketServer({httpServer:p_server})
-    , clients = [];
+var  clients = [];
 
 exports.Handler = function(p_server ){  
+  
+  wsServer = new webSocketServer({httpServer:p_server});
   
   wsServer.on('request', function(request){
     
