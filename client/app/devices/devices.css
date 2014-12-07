@@ -1,0 +1,12 @@
+.device-status{
+	margin-top: 7px;
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	display: block;
+	background-color: #bc0000;
+}
+
+.device-connected {
+	background-color: #009700;
+}

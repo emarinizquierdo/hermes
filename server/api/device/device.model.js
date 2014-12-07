@@ -5,6 +5,8 @@ var mongoose = require('mongoose'),
 
 var DeviceSchema = new Schema({
   clientID: String,
+  secret : String,
+  name: String,
   topics: []
 });
 

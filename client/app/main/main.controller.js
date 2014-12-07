@@ -29,12 +29,12 @@ angular.module('hermesApp')
         /**
          * Example #1 - connect to an unsecure MOWS server
          */
-        
+        /*
         var _server = ( $location.$$absUrl.indexOf("localhost") >=0 ) ? "localhost" : "hermes-nefele.rhcloud.com";
 
         var unsecureClient = mows.createClient( 8000, _server );
 
         applyEventHandlers(unsecureClient, 'Hello, I am a unsecure client');
-
+*/
 
     });

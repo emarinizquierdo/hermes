@@ -1,21 +1,23 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-  <p>The delete user and user index api routes are restricted to users with the 'admin' role.</p>
+  <p>This view is for each user, to add or remove devices</p>
   <ul class="list-group">
     <li class="list-group-item" ng-repeat="device in devices">
-        <strong>{{device.clientID}}</strong><br>
-        <span class="text-muted">{{device.clientID}}</span>
+    <div ng-class="{'device-connected' : device.status.on}" class="device-status pull-right"></div>
+        <strong>{{device.name}}</strong><br>
+        <label>clientID:</label> <span class="text-muted">{{device.clientID}}</span><br>
+        <label>secret:</label> <span class="text-muted">{{device.secret}}</span>
         <a ng-click="deleteDevice(device)" class="trash"><span class="glyphicon glyphicon-trash pull-right"></span></a>
     </li>
   </ul>
 
   <form role="form">
   <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input ng-model="newDevice.clientID" type="text" class="form-control" placeholder="clientID">
+    <label for="exampleInputEmail1">Add new device:</label>
+    <input ng-model="newDevice.name" type="text" class="form-control" placeholder="Device name">
   </div>
-  <button ng-click="addDevice(newDevice)" class="btn btn-default">Submit</button>
+  <button ng-click="addDevice(newDevice)" class="btn btn-default">Add</button>
 </form>
 
 </div>
