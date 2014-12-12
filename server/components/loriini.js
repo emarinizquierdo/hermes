@@ -16,7 +16,8 @@ module.exports = {
         if (!self.clients) self.clients = {};
 
         client.on('connect', function(packet) {
-
+            console.log("llegando paquete de conexion: ", packet);
+            
             var _clientID = packet.clientId;
 
             Device.find({clientID : _clientID.replace("loriini", "") }, function(err, device) {

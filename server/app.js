@@ -24,6 +24,11 @@ var server = require('http').createServer(app);
 var mows = require('mows');
 require('./config/mows')(server, mows);
 
+/*
+var mosca = require('mosca')
+require('./config/mosca')(server, mosca);
+*/
+
 require('./config/express')(app);
 require('./routes')(app);
 
