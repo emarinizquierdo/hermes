@@ -16,6 +16,8 @@
   <div class="form-group">
     <label for="exampleInputEmail1">Add new device:</label>
     <input ng-model="newDevice.name" type="text" class="form-control" placeholder="Device name">
+    <label for="exampleInputEmail1">Client ID:</label>
+    <input ng-model="newDevice.clientID" type="text" class="form-control" placeholder="Device name">
   </div>
   <button ng-click="addDevice(newDevice)" class="btn btn-default">Add</button>
 </form>

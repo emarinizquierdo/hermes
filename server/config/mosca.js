@@ -4,7 +4,13 @@
 
 'use strict';
 
+var _ = require('lodash');
+var Device = require('../api/device/device.model');
+var self = this || {};
+
 module.exports = function(server, mosca) {
+
+	if (!self.clients) self.clients = {};
 
     var moscaSettings = {
         port: 1833,
@@ -14,12 +20,41 @@ module.exports = function(server, mosca) {
     moscaserver.on('ready', setup);
 
     moscaserver.on('clientConnected', function(client) {
-        console.log('client connected', client.id);
+        console.log("llegando paquete de conexion: ", client.id);
+
+            var _clientID = client.id;
+
+            Device.find({
+                clientID: _clientID.replace("loriini", "")
+            }, function(err, device) {
+
+                if (err) {
+                    console.log('Error trying connect');
+                    client.disconnect();
+                    return;
+                }
+                if (!device || device.length == 0) {
+                    console.log("Doesn't exist this client");
+                    client.disconnect();
+                    return;
+                }
+
+                console.log('Connected');
+
+                client.id = _clientID;
+                self.clients[client.id] = client;
+
+            });
     });
 
-    // fired when a message is received
-    moscaserver.on('published', function(packet, client) {
-        console.log('Published', packet.payload);
+    moscaserver.on('publish', function(packet) {
+        console.log('Publish');
+        for (var k in self.clients) {
+            self.clients[k].publish({
+                topic: packet.topic,
+                payload: packet.payload
+            });
+        }
     });
 
     moscaserver.attachHttpServer(server);
