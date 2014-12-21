@@ -5,7 +5,7 @@
   <ul class="list-group">
     <li class="list-group-item" ng-repeat="device in devices">
     <div ng-class="{'device-connected' : device.status.on}" class="device-status pull-right"></div>
-        <strong>{{device.name}}</strong><br>
+        <a ng-href="device/{{device._id}}"><strong>{{device.name}}</strong></a><br>
         <label>clientID:</label> <span class="text-muted">{{device.clientID}}</span><br>
         <label>secret:</label> <span class="text-muted">{{device.secret}}</span>
         <a ng-click="deleteDevice(device)" class="trash"><span class="glyphicon glyphicon-trash pull-right"></span></a>
