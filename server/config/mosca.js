@@ -21,42 +21,12 @@ module.exports = function(server, mosca) {
 
     moscaserver.on('clientConnected', function(client) {
         console.log("llegando paquete de conexion: ", client.id);
-/*
-            var _clientID = client.id;
-
-            Device.find({
-                clientID: _clientID.replace("loriini", "")
-            }, function(err, device) {
-
-                if (err) {
-                    console.log('Error trying connect');
-                    return;
-                }
-                if (!device || device.length == 0) {
-                	console.log(client);
-                    console.log("Doesn't exist this client");
-                    return;
-                }
-
-                console.log('Connected');
-
-                client.id = _clientID;
-                self.clients[client.id] = client;
-
-            });
-*/
     });
-/*
+
     moscaserver.on('published', function(packet) {
-        console.log('Publish');
-        for (var k in self.clients) {
-            self.clients[k].publish({
-                topic: packet.topic,
-                payload: packet.payload
-            });
-        }
+        console.log('Publish', packet.payload);
     });
-*/
+
     moscaserver.attachHttpServer(server);
 
     // fired when the mqtt server is ready

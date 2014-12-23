@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('hermesApp')
-    .controller('DevicesCtrl', function($scope, $http, $location, $timeout, Device) {
+    .controller('DevicesCtrl', function($scope, $http, $location, $timeout, Device, Loriini) {
 
         var STATUS_DAEMON_TIMESTAMP = 6000;
 
@@ -9,13 +9,6 @@ angular.module('hermesApp')
 
         $scope.devices = [];
         $scope.newDevice = {};
-
-        Device.query().$promise.then(function(p_data) {
-            $scope.devices = p_data;
-            for (var _i = 0; _i < $scope.devices.length; _i++) {
-                _connectLoriiniListener($scope.devices[_i]);
-            }
-        });
 
 
         $scope.addDevice = function(p_newDevice) {
@@ -56,72 +49,14 @@ angular.module('hermesApp')
             return uuid;
         }
 
-        //Using the HiveMQ public Broker, with a random client Id
-        var logActivity = function(message) {
-            var logElem = document.getElementById('log');
-            logElem.innerHTML = logElem.innerHTML + '<br/>' + message;
-        }
-
-        var applyEventHandlers = function(p_device, client, msg) {
-
-            client.on('connect', function() {
-                client.subscribe('/sloriini/status/' + p_device.clientID + '/' + p_device.secret);
-
-                client.on('message', function(topic, message) {
-                    if (topic == "/sloriini/status/" + p_device.clientID + '/' + p_device.secret) {
-                      console.log(client.options.clientId);
-                        var _currentTimestamp = new Date().getTime();
-                        p_device.statusTimestamp = _currentTimestamp + STATUS_DAEMON_TIMESTAMP;
-                        _statusDaemonChecker(p_device);
-                        if (!$scope.$$phase) {
-                            $scope.$apply();
-                        }
-                    }
-                });
-
-            });
-
-            client.on('error', function(e) {
-                console.log('Client Error:', e);
-            });
 
 
-        };
-
-        var _statusDaemonChecker = function(p_device) {
-
-            var _currentTimestamp = new Date().getTime();
-
-            if (p_device.statusDaemon) {
-                $timeout.cancel(p_device.statusDaemon);
+        Device.query().$promise.then(function(p_data) {
+            $scope.devices = p_data;
+            for (var _i = 0; _i < $scope.devices.length; _i++) {
+                Loriini.attachHandler($scope.devices[_i]);
             }
-
-            if (!p_device.statusTimestamp || p_device.statusTimestamp < _currentTimestamp) {
-                p_device.status = {
-                    on: false
-                };
-                p_device.statusDaemon = false;
-            } else {
-                p_device.status = {
-                    on: true
-                };
-                _currentTimestamp += STATUS_DAEMON_TIMESTAMP;
-                p_device.statusDaemon = $timeout(function() {
-                    _statusDaemonChecker(p_device);
-                }, STATUS_DAEMON_TIMESTAMP);
-            }
-
-        };
-
-        var _connectLoriiniListener = function(p_device) {
-
-            var _clientID = "loriini" + p_device.clientID;
-            var unsecureClient = mows.createClient(8000, _server, {
-                clientId: _clientID
-            });
-
-            applyEventHandlers(p_device, unsecureClient);
-
-        };
+        });
+            
 
     });
