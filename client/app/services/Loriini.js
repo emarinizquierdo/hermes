@@ -1,96 +1,128 @@
 'use strict';
 
 angular.module('hermesApp')
-  .factory('Loriini', function ($location) {
-    
-    var _Loriini = {};
+    .factory('Loriini', function($rootScope, $location, $timeout, $q, Device) {
 
-    var STATUS_DAEMON_TIMESTAMP = 6000;
+        var _Loriini = {};
 
-    var unsecureClient;
-    var loriniConnected = false;
-    var tailedAttachments = [];
+        var STATUS_DAEMON_TIMESTAMP = 6000;
 
-    var _server = ($location.$$absUrl.indexOf("localhost") >= 0) ? "localhost" : "hermes-nefele.rhcloud.com";
+        var unsecureClient;
+        var loriniConnected = false;
 
-    var _attachHandler = function(p_device) {
+        var _server = ($location.$$absUrl.indexOf("localhost") >= 0) ? "localhost" : "hermesiot.ddns.net"; //"hermes-nefele.rhcloud.com";
 
-    	if(!loriniConnected){
+        var _loriiniPromise = $q.defer();
 
-    		tailedAttachments[tailedAttachments.length] = _attachHandler;
+        //Track to devices
+        _Loriini.devices = [];
 
-    	}else{
+        var _attachDeviceHandler = function(p_device) {
 
-    		unsecureClient.subscribe('/sloriini/status/' + p_device.clientID + '/' + p_device.secret);
+            unsecureClient.subscribe('/sloriini/status/' + p_device.clientID + '/' + p_device.secret);
 
-	        unsecureClient.on('message', function(topic, message) {
-	            if (topic == "/sloriini/status/" + p_device.clientID + '/' + p_device.secret) {
-	                console.log(unsecureClient.options.clientId);
-	                var _currentTimestamp = new Date().getTime();
-	                p_device.statusTimestamp = _currentTimestamp + STATUS_DAEMON_TIMESTAMP;
-	                _statusDaemonChecker(p_device);
-	            }
-	        });
-    	}        
+            unsecureClient.on('message', function(topic, message) {
+                if (topic == "/sloriini/status/" + p_device.clientID + '/' + p_device.secret) {
+                    if (!$rootScope.$$phase) {
+                        $rootScope.$apply();
+                    }
+                    console.log(unsecureClient.options.clientId);
+                    var _currentTimestamp = new Date().getTime();
+                    p_device.statusTimestamp = _currentTimestamp + STATUS_DAEMON_TIMESTAMP;
+                    _statusDaemonChecker(p_device);
+                }
+            });
 
-    };
+        };
 
-    var _statusDaemonChecker = function(p_device) {
+        var _statusDaemonChecker = function(p_device) {
 
-        var _currentTimestamp = new Date().getTime();
+            var _currentTimestamp = new Date().getTime();
 
-        if (p_device.statusDaemon) {
-            $timeout.cancel(p_device.statusDaemon);
-        }
-
-        if (!p_device.statusTimestamp || p_device.statusTimestamp < _currentTimestamp) {
-            p_device.status = {
-                on: false
-            };
-            p_device.statusDaemon = false;
-        } else {
-            p_device.status = {
-                on: true
-            };
-            _currentTimestamp += STATUS_DAEMON_TIMESTAMP;
-            p_device.statusDaemon = $timeout(function() {
-                _statusDaemonChecker(p_device);
-            }, STATUS_DAEMON_TIMESTAMP);
-        }
-
-    };
-
-    var _initLoriini = function(p_callback) {
-
-        var unsecureClient = mows.createClient(8000, _server, {
-            clientId: "loriini-" + new Date().getTime()
-        });
-
-        unsecureClient.on('connect', function() {
-            console.log('Client connected.');
-            loriniConnected = true;
-            for(var _i = 0; _i < tailedAttachments.length; _i++){
-            	tailedAttachments[_i]();
+            if (p_device.statusDaemon) {
+                $timeout.cancel(p_device.statusDaemon);
             }
 
-        });
+            if (!p_device.statusTimestamp || p_device.statusTimestamp < _currentTimestamp) {
+                p_device.status = {
+                    on: false
+                };
+                p_device.statusDaemon = false;
+            } else {
+                p_device.status = {
+                    on: true
+                };
+                if (!$rootScope.$$phase) {
+                    $rootScope.$apply();
+                }
+                _currentTimestamp += STATUS_DAEMON_TIMESTAMP;
+                p_device.statusDaemon = $timeout(function() {
+                    _statusDaemonChecker(p_device);
+                }, STATUS_DAEMON_TIMESTAMP);
+            }
 
-        unsecureClient.on('error', function(e) {
-            console.log('Client Error:', e);
-        });
+        };
 
-    };
+        var _connect = function(p_callback) {
 
-    var _asociateHandlers = function(p_loriini_client, p_device) {
+            unsecureClient = mows.createClient(8000, _server, {
+                clientId: "loriini-" + new Date().getTime()
+            });
 
-        applyEventHandlers(p_device, p_loriini_client);
+            unsecureClient.on('connect', function() {
 
-    };
+                console.log('Client connected.');
 
-	_initLoriini();
+                for (var _i = 0; _i < _Loriini.devices.length; _i++) {
+                    _attachDeviceHandler(_Loriini.devices[_i]);
+                }
 
-	_Loriini.attachHandler = _attachHandler;
+                loriniConnected = true;
 
-	return _Loriini;
+            });
 
-  });
+            unsecureClient.on('error', function(e) {
+                console.log('Client Error:', e);
+            });
+
+        };
+
+        var _initLoriini = function() {
+            Device.query().$promise.then(function(p_data) {
+                _Loriini.devices = p_data;
+                _loriiniPromise.resolve(_Loriini.devices);
+                _Loriini.connect();
+            });
+        }
+
+        var _asociateHandlers = function(p_loriini_client, p_device) {
+
+            applyEventHandlers(p_device, p_loriini_client);
+
+        };
+
+        var _resolveGetDevice = function() {
+
+        }
+
+        var _getDevices = function(p_id) {
+
+            if (loriniConnected) {
+
+                _loriiniPromise.resolve(_Loriini.devices);
+
+            }
+
+            return _loriiniPromise.promise;
+            
+        }
+
+        _initLoriini();
+
+        _Loriini.attachDeviceHandler = _attachDeviceHandler;
+        _Loriini.getDevices = _getDevices;
+        _Loriini.connect = _connect;
+
+        return _Loriini;
+
+    });

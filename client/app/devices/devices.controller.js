@@ -7,15 +7,14 @@ angular.module('hermesApp')
 
         var _server = ($location.$$absUrl.indexOf("localhost") >= 0) ? "localhost" : "hermes-nefele.rhcloud.com";
 
-        $scope.devices = [];
+        $scope.Loriini = Loriini;
         $scope.newDevice = {};
-
 
         $scope.addDevice = function(p_newDevice) {
 
             p_newDevice = _generateClientIDAndSecret(p_newDevice);
             Device.save(p_newDevice);
-            $scope.devices = Device.query();
+            Loriini.devices = Device.query();
 
         }
 
@@ -24,7 +23,7 @@ angular.module('hermesApp')
             Device.delete({
                 id: p_device._id
             });
-            $scope.devices = Device.query();
+            Loriini.devices = Device.query();
 
         }
 
@@ -47,16 +46,6 @@ angular.module('hermesApp')
 
             var uuid = s.join("");
             return uuid;
-        }
-
-
-
-        Device.query().$promise.then(function(p_data) {
-            $scope.devices = p_data;
-            for (var _i = 0; _i < $scope.devices.length; _i++) {
-                Loriini.attachHandler($scope.devices[_i]);
-            }
-        });
-            
+        }            
 
     });

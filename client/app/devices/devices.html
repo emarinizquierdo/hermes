@@ -3,7 +3,7 @@
 <div class="container">
   <p>This view is for each user, to add or remove devices</p>
   <ul class="list-group">
-    <li class="list-group-item" ng-repeat="device in devices">
+    <li class="list-group-item" ng-repeat="device in Loriini.devices">
     <div ng-class="{'device-connected' : device.status.on}" class="device-status pull-right"></div>
         <a ng-href="device/{{device._id}}"><strong>{{device.name}}</strong></a><br>
         <label>clientID:</label> <span class="text-muted">{{device.clientID}}</span><br>
