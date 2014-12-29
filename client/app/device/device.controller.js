@@ -13,8 +13,23 @@ angular.module('hermesApp')
                     $scope.device = p_data[_i];
                 }
             }
+            _init();
         });
 
+function _init(){
+
+
+Loriini.attachHandler($scope.device, "/plotter/draw/");
+
+}
+
+ 	// hard-code data
+	$scope.dataPlotter = [
+		{name: "Greg", score: 98},
+		{name: "Ari", score: 96},
+		{name: 'Q', score: 75},
+		{name: "Loser", score: 48}
+	];
 
 
     });

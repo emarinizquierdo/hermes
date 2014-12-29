@@ -17,7 +17,7 @@ angular.module('hermesApp')
         //Track to devices
         _Loriini.devices = [];
 
-        var _attachDeviceHandler = function(p_device) {
+        var _statusDeviceDaemon = function(p_device) {
 
             unsecureClient.subscribe('/sloriini/status/' + p_device.clientID + '/' + p_device.secret);
 
@@ -63,6 +63,22 @@ angular.module('hermesApp')
 
         };
 
+        var _attachHandler = function( p_device, p_rest, p_handler){
+
+        	unsecureClient.subscribe(p_rest + p_device.clientID + '/' + p_device.secret);
+
+            unsecureClient.on('message', function(topic, message) {
+                if (topic == p_rest + p_device.clientID + '/' + p_device.secret) {
+                    if (!$rootScope.$$phase) {
+                        $rootScope.$apply();
+                    }
+                    console.log( p_rest + " topic recived from " + p_device.clientID);
+                    
+                }
+            });
+
+        };
+
         var _connect = function(p_callback) {
 
             unsecureClient = mows.createClient(8000, _server, {
@@ -74,7 +90,7 @@ angular.module('hermesApp')
                 console.log('Client connected.');
 
                 for (var _i = 0; _i < _Loriini.devices.length; _i++) {
-                    _attachDeviceHandler(_Loriini.devices[_i]);
+                    _statusDeviceDaemon(_Loriini.devices[_i]);
                 }
 
                 loriniConnected = true;
@@ -119,7 +135,7 @@ angular.module('hermesApp')
 
         _initLoriini();
 
-        _Loriini.attachDeviceHandler = _attachDeviceHandler;
+        _Loriini.attachHandler = _attachHandler;
         _Loriini.getDevices = _getDevices;
         _Loriini.connect = _connect;
 
