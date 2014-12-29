@@ -18,8 +18,7 @@ angular.module('hermesApp')
 
 function _init(){
 
-
-Loriini.attachHandler($scope.device, "/plotter/draw/");
+    
 
 }
 

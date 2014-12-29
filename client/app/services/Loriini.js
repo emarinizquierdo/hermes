@@ -8,7 +8,7 @@ angular.module('hermesApp')
         var STATUS_DAEMON_TIMESTAMP = 6000;
 
         var unsecureClient;
-        var loriniConnected = false;
+        $rootScope.loriniConnected = false;
 
         var _server = ($location.$$absUrl.indexOf("localhost") >= 0) ? "localhost" : "hermesiot.ddns.net"; //"hermes-nefele.rhcloud.com";
 
@@ -65,17 +65,31 @@ angular.module('hermesApp')
 
         var _attachHandler = function( p_device, p_rest, p_handler){
 
-        	unsecureClient.subscribe(p_rest + p_device.clientID + '/' + p_device.secret);
+            if($rootScope.loriniConnected){
+                _privateAttachHandler();
+            }else{
+                $rootScope.$watch('loriniConnected', function(p_value){
+                    if(p_value){
+                        _privateAttachHandler();
+                    }                    
+                });
+            }
 
-            unsecureClient.on('message', function(topic, message) {
-                if (topic == p_rest + p_device.clientID + '/' + p_device.secret) {
-                    if (!$rootScope.$$phase) {
-                        $rootScope.$apply();
+            function _privateAttachHandler(){
+                unsecureClient.subscribe(p_rest + p_device.clientID + '/' + p_device.secret);
+
+                unsecureClient.on('message', function(topic, message) {
+                    if (topic == p_rest + p_device.clientID + '/' + p_device.secret) {
+                        if (!$rootScope.$$phase) {
+                            $rootScope.$apply();
+                        }
+                        p_handler(message);
+                        console.log( p_rest + " topic recived from " + p_device.clientID);
+                        
                     }
-                    console.log( p_rest + " topic recived from " + p_device.clientID);
-                    
-                }
-            });
+                });
+            }
+        	
 
         };
 
@@ -93,7 +107,7 @@ angular.module('hermesApp')
                     _statusDeviceDaemon(_Loriini.devices[_i]);
                 }
 
-                loriniConnected = true;
+                $rootScope.loriniConnected = true;
 
             });
 
@@ -123,7 +137,7 @@ angular.module('hermesApp')
 
         var _getDevices = function(p_id) {
 
-            if (loriniConnected) {
+            if ($rootScope.loriniConnected) {
 
                 _loriiniPromise.resolve(_Loriini.devices);
 
