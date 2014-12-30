@@ -5,7 +5,9 @@ angular.module('hermesApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ngDragDrop',
+  'angular-flippy'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider

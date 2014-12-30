@@ -1,30 +1,37 @@
 angular.module('hermesApp')
     .directive('gauge', ['$window', '$timeout', 'd3Service', 'Loriini',
+
         function($window, $timeout, d3Service, Loriini) {
+
             return {
                 restrict: 'A',
+                templateUrl: 'app/directives/gauge.html',
                 scope: {
                     data: '=',
                     device: '=',
-                    label: '@',
                     onClick: '&'
                 },
                 link: function(scope, ele, attrs) {
 
-                    var config = 
-                    {
-                      size: 120,
-                      label: "Temperatura",
-                      min: 0,
-                      max: 100,
-                      minorTicks: 5
+                    var config = {
+                        size: ele.width() - 10,
+                        label: "Temperatura",
+                        min: 0,
+                        max: 100,
+                        minorTicks: 5
                     }
 
-                      var range = config.max - config.min;
-        config.yellowZones = [{ from: config.min + range*0.75, to: config.min + range*0.9 }];
-        config.redZones = [{ from: config.min + range*0.9, to: config.max }];
+                    var range = config.max - config.min;
+                    config.yellowZones = [{
+                        from: config.min + range * 0.75,
+                        to: config.min + range * 0.9
+                    }];
+                    config.redZones = [{
+                        from: config.min + range * 0.9,
+                        to: config.max
+                    }];
 
-        var migauge; 
+                    var migauge;
 
                     function Gauge(p_ele, configuration) {
 
@@ -54,7 +61,7 @@ angular.module('hermesApp')
                         }
 
                         this.render = function() {
-                            this.body = d3.select(ele[0])
+                            this.body = d3.select(ele.find("#gauge-wrapper-d3")[0])
                                 .append("svg:svg")
                                 .attr("class", "gauge")
                                 .attr("width", this.config.size)
@@ -272,14 +279,31 @@ angular.module('hermesApp')
                             };
                         }
 
+                        angular.element($window).bind('resize', function() {
+                            var config = {
+                                size: ele.width() - 10,
+                                label: "Temperatura",
+                                min: 0,
+                                max: 100,
+                                minorTicks: 5
+                            };
+                            var range = config.max - config.min;
+                            config.yellowZones = [{
+                                from: config.min + range * 0.75,
+                                to: config.min + range * 0.9
+                            }];
+                            config.redZones = [{
+                                from: config.min + range * 0.9,
+                                to: config.max
+                            }];
+                            self.body.remove();
+                            self.configure(config);
+                            self.render();
+                        });
+
                         // initialization
                         this.configure(configuration);
                     }
-
-
-                    
-
-
 
 
                     d3Service.d3().then(function(d3) {
@@ -287,14 +311,16 @@ angular.module('hermesApp')
                         migauge = new Gauge(ele, config);
                         migauge.render();
 
-                        var handler = function(p_data){
-                          migauge.redraw(p_data);
+                        var handler = function(p_data) {
+                            migauge.redraw(p_data);
                         }
-                        
+
                         Loriini.attachHandler(scope.device, "/plotter/draw/", handler);
-                        
+
                     });
                 }
             }
+
         }
-    ])
+
+    ]);

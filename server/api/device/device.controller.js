@@ -14,7 +14,8 @@ var Device = require('./device.model');
 
 // Get list of devices
 exports.index = function(req, res) {
-  Device.find(function (err, devices) {
+  var userId = req.user._id;
+  Device.find({userId : userId}, function (err, devices) {
     if(err) { return handleError(res, err); }
     return res.json(200, devices);
   });
@@ -22,7 +23,8 @@ exports.index = function(req, res) {
 
 // Get a single device
 exports.show = function(req, res) {
-  Device.findById(req.params.id, function (err, device) {
+  var userId = req.user._id;
+  Device.find({_id : req.params.id, userId : userId}, function (err, device) {
     if(err) { return handleError(res, err); }
     if(!device) { return res.send(404); }
     return res.json(device);
@@ -31,6 +33,7 @@ exports.show = function(req, res) {
 
 // Creates a new device in the DB.
 exports.create = function(req, res) {
+  req.body.userId = req.user._id;
   Device.create(req.body, function(err, device) {
     if(err) { return handleError(res, err); }
     return res.json(201, device);
@@ -39,8 +42,9 @@ exports.create = function(req, res) {
 
 // Updates an existing device in the DB.
 exports.update = function(req, res) {
+  var userId = req.user._id;
   if(req.body._id) { delete req.body._id; }
-  Device.findById(req.params.id, function (err, device) {
+  Device.find({_id : req.params.id, userId : userId}, function (err, device) {
     if (err) { return handleError(res, err); }
     if(!device) { return res.send(404); }
     var updated = _.merge(device, req.body);
@@ -53,7 +57,8 @@ exports.update = function(req, res) {
 
 // Deletes a device from the DB.
 exports.destroy = function(req, res) {
-  Device.findById(req.params.id, function (err, device) {
+  var userId = req.user._id;
+  Device.find({ _id : req.params.id, userId : userId}, function (err, device) {
     if(err) { return handleError(res, err); }
     if(!device) { return res.send(404); }
     device.remove(function(err) {

@@ -1,16 +1,26 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-  <p>This view is for each user, to add or remove devices</p>
-  <ul class="list-group">
-    <li class="list-group-item" >
-    <div ng-class="{'device-connected' : device.status.on}" class="device-status pull-right"></div>
-        <strong>{{device.name}}</strong><br>
-        <label>clientID:</label> <span class="text-muted">{{device.clientID}}</span><br>
-        <label>secret:</label> <span class="text-muted">{{device.secret}}</span>
-        <a ng-click="deleteDevice(device)" class="trash"><span class="glyphicon glyphicon-trash pull-right"></span></a>
+    <p>This view is for each user, to add or remove devices</p>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <div ng-class="{'device-connected' : device.status.on}" class="device-status pull-right"></div>
+            <strong>{{device.name}}</strong>
+            <br>
+            <label>clientID:</label> <span class="text-muted">{{device.clientID}}</span>
+            <br>
+            <label>secret:</label> <span class="text-muted">{{device.secret}}</span>
+            <a ng-click="deleteDevice(device)" class="trash"><span class="glyphicon glyphicon-trash pull-right"></span></a>
+        </li>
+    </ul>
+
+    <li class="widget-wrapper" ng-repeat="item in modules" data-drop="true" ng-model='modules' jqyoui-droppable="{index: {{$index}}, onDrop:'dropCallback(item.title, $index)'}">
+        <span class="glyphicon glyphicon-remove" ng-click="deleteModule(item)"></span>
+        <div gauge device="device" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="list1" jqyoui-draggable="{index: {{$index}},animate:true}">
+            
+        </div>
     </li>
-  </ul>
-<!--<div d3-bars bar-height="20" bar-padding="5" data="dataPlotter"></div>-->
-<div gauge device="device"></div>
+
+    <button ng-click="addModule()">Añadir módulo</button>
+
 </div>
