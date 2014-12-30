@@ -10,7 +10,7 @@ var self = this || {};
 
 module.exports = function(server, mosca) {
 
-	if (!self.clients) self.clients = {};
+    if (!self.clients) self.clients = {};
 
     var moscaSettings = {
         port: 1833,
@@ -25,6 +25,12 @@ module.exports = function(server, mosca) {
 
     moscaserver.on('published', function(packet) {
         console.log('Publish', packet.payload);
+    });
+
+    moscaserver.on('error', function(err) {
+        console.log('error!', err);
+
+        
     });
 
     moscaserver.attachHttpServer(server);

@@ -42,8 +42,8 @@ var all = {
   },
 
   google: {
-    clientID:     process.env.GOOGLE_ID || '536470903952-psge4pbmm7vem5bcvlosfdai6ihsskge.apps.googleusercontent.com',
-    clientSecret: process.env.GOOGLE_SECRET || 'eH1TFn1RTItvhx-iqAHMJ1Uf',
+    clientID:     process.env.GOOGLE_ID || '536470903952-uit2nvn0qk34ijn26dalnb307jm3i0ii.apps.googleusercontent.com',
+    clientSecret: process.env.GOOGLE_SECRET || 'RbP_AT9lQwckLyUGpF9gL6UF',
     callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
   }
 };
