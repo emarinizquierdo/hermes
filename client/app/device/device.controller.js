@@ -14,6 +14,7 @@ angular.module('hermesApp')
                 for (var _i = 0; _i < p_data.length; _i++) {
                     if ($routeParams.id == p_data[_i]._id) {
                         $scope.device = p_data[_i];
+                        $scope.device.handlers = {};
                     }
                 }
 
@@ -36,20 +37,26 @@ angular.module('hermesApp')
                 configuration: "{}"
             };
 
-            Module.save(_moduleSeed, function(p_data) {;
+            Module.save(_moduleSeed, function(p_data) {
                _init();
             }, function(p_error) {});
         };
 
         $scope.deleteModule = function( p_module ) {
 
-            Module.delete(p_module, function(p_data) {;
+            Module.delete({ id : p_module._id }, function(p_data) {;
                _init();
             }, function(p_error) {});
         };
 
         $scope.dropCallback = function(event, ui, title, $index) {
-
+            if ($scope.modules.map(function(item) {
+                    return item.title;
+                }).join('') === 'GOLLUM') {
+                $scope.modules.forEach(function(value, key) {
+                    $scope.modules[key].drag = false;
+                });
+            }
         };
 
         _init();
