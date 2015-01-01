@@ -1,7 +1,7 @@
 angular.module('hermesApp')
-    .directive('module', ['$window', '$timeout', '$compile', 'd3Service', 'Loriini', 'Gauge', 'Module',
+    .directive('module', ['$window', '$timeout', '$compile', 'd3Service', 'Loriini', 'Gauge', 'BasicPlotter', 'Module',
 
-        function($window, $timeout, $compile, d3Service, Loriini, Gauge, Module) {
+        function($window, $timeout, $compile, d3Service, Loriini, Gauge, BasicPlotter, Module) {
 
             return {
                 restrict: 'A',
@@ -35,17 +35,23 @@ angular.module('hermesApp')
                     }];
 
                     var migauge;
+                    var basicPlotter; 
 
                     d3Service.d3().then(function(d3) {
 
-                        migauge = new Gauge(ele, config);
+                        if(scope.module.moduleDirectiveName == "gauge"){
+                            migauge = new Gauge(ele, config);
+                            migauge.render();
+
+                            var handler = function(p_data) {
+                                migauge.redraw(p_data);
+                            }
+                        }else{
+                            basicPlotter = new BasicPlotter(ele,config);
+                        }
+                        
 
                         $compile(ele.find(".module-modal-wrapper").attr("gauge-config", "module.configuration"))(scope);
-                        migauge.render();
-
-                        var handler = function(p_data) {
-                            migauge.redraw(p_data);
-                        }
 
                         Loriini.attachHandler(scope.device, "/plotter/draw/", scope.module._id, handler);
 
@@ -65,7 +71,7 @@ angular.module('hermesApp')
                             scope.update(p_module);
                         }, 300);
                     }
-                    
+
                 }
             }
 
