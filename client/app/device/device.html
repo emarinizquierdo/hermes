@@ -14,9 +14,8 @@
         </li>
     </ul>
 
-    <li class="widget-wrapper" ng-repeat="item in modules" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" ng-model="modules" jqyoui-draggable="{animate:true}">
-        <span class="glyphicon glyphicon-remove" ng-click="deleteModule(item)"></span>
-        <div module="item" device="device" data-drag="{{item.drag}}" data-jqyoui-options="{revert: 'invalid'}" ng-model="modules" jqyoui-draggable="{index: {{$index}},animate:true}">
+    <li class="module-wrapper" ng-repeat="item in modules" data-drop="true" ng-model='modules' jqyoui-droppable="{index: {{$index}}}">
+        <div module="item" device="device" update="updateModule" delete="deleteModule" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" ng-model="modules" jqyoui-draggable="{index: {{$index}},animate:true}">
         </div>
     </li>
 

@@ -28,17 +28,36 @@
     color: #000;
     padding: 0.2em 0;
 }
-.widget-wrapper {
-    height: 200px;
+.module-wrapper {
+    height: 230px;
     width: 20%;
     line-height: 20px;
-    border: 1px solid #ddd;
     padding: 3px;
     margin-left: 10px;
     float: left;
     list-style: none;
     text-align: center;
 }
+
+.module-content {
+    border: 1px solid #ddd;
+}
+
+.module-header {
+    width: 100%;
+    text-align: right;
+    font-size: 12px;
+    padding: 5px;
+}
+
+.module-buttons {
+    margin-top: 20px;
+}
+
+.module-modal {
+    text-align: left;
+}
+
 flippy {
     float: left;
     -webkit-perspective: 600px;
@@ -63,6 +82,7 @@ flippy-front {
     -moz-backface-visibility: hidden;
     -ms-backface-visibility: hidden;
     backface-visibility: hidden;
+    height: 250px;
 }
 flippy-back {
     position: absolute;
@@ -81,6 +101,7 @@ flippy-back {
     -moz-backface-visibility: hidden;
     -ms-backface-visibility: hidden;
     backface-visibility: hidden;
+    height: 250px;
 }
 flippy.flipped flippy-front {
     z-index: 900;
@@ -114,6 +135,7 @@ flippy.fancy flippy-front {
     height: inherit;
     background: white;
     text-align: center;
+    height: 250px;
 }
 flippy.fancy flippy-front.flipped {
     border-color: #eee;
@@ -129,7 +151,9 @@ flippy.fancy flippy-back {
     height: inherit;
     background: white;
     text-align: center;
+    height: 250px;
 }
 flippy.fancy flippy-back.flipped {
     /*background: #80868d;*/
+    height: 250px;
 }

@@ -247,28 +247,38 @@ angular.module('hermesApp')
         }
 
         angular.element($window).bind('resize', function() {
-            var config = {
-                size: p_ele.width() - 10,
-                label: "Temperatura",
-                min: 0,
-                max: 100,
-                minorTicks: 5
-            };
-            var range = config.max - config.min;
-            config.yellowZones = [{
-                from: config.min + range * 0.75,
-                to: config.min + range * 0.9
-            }];
-            config.redZones = [{
-                from: config.min + range * 0.9,
-                to: config.max
-            }];
+            
+            configuration.size = p_ele.width() - 10;
+
             self.body.remove();
-            self.configure(config);
+            self.configure(configuration);
             self.render();
         });
 
         // initialization
         this.configure(configuration);
+
     }
-});
+})
+.directive('gaugeConfig', [
+
+    function() {
+
+        return {
+            restrict: 'A',
+            templateUrl: 'app/directives/gaugeConfig.html',
+            scope: {
+                gaugeConfig : '='
+            },
+            link : function(scope,element, attr){
+                
+            },
+            controller: function($scope, $element) {
+
+
+            }
+        }
+
+    }
+
+]);
