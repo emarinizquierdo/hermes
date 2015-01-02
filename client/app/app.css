@@ -157,3 +157,21 @@ flippy.fancy flippy-back.flipped {
     /*background: #80868d;*/
     height: 250px;
 }
+
+#module-wrapper-d3 {
+    height: 220px;
+}
+
+/* simple line styles */
+.line {
+  fill: none;
+  stroke: rgb(220, 57, 18);
+  stroke-width: 1.5px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.73);
+  shape-rendering: crispEdges;
+}

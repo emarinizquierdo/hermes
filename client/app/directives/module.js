@@ -1,7 +1,7 @@
 angular.module('hermesApp')
-    .directive('module', ['$window', '$timeout', '$compile', 'd3Service', 'Loriini', 'Gauge', 'BasicPlotter', 'Module',
+    .directive('module', ['$window', '$timeout', '$compile', 'd3Service', 'Loriini', 'Gauge', 'BasicPlotter', 'SimpleLine', 'Module',
 
-        function($window, $timeout, $compile, d3Service, Loriini, Gauge, BasicPlotter, Module) {
+        function($window, $timeout, $compile, d3Service, Loriini, Gauge, BasicPlotter, SimpleLine, Module) {
 
             return {
                 restrict: 'A',
@@ -36,24 +36,35 @@ angular.module('hermesApp')
 
                     var migauge;
                     var basicPlotter; 
+                    var simpleLine;
 
                     d3Service.d3().then(function(d3) {
 
                         if(scope.module.moduleDirectiveName == "gauge"){
-                            migauge = new Gauge(ele, config);
-                            migauge.render();
 
-                            var handler = function(p_data) {
-                                migauge.redraw(p_data);
-                            }
-                        }else{
+                            migauge = new Gauge(ele, config);
+
+                            _attachLorini("/plotter/draw/", migauge.handler);
+
+                        }else if(scope.module.moduleDirectiveName == "basicPlotter"){
+
                             basicPlotter = new BasicPlotter(ele,config);
+
+                            _attachLorini("/chart/draw/", basicPlotter.handler);
+
+                        }else{
+
+                            simpleLine = new SimpleLine(ele,config);
+
+                            handler = function(p_data) {
+                                simpleLine.redraw(p_data);
+                            }
+
+                            _attachLorini("/simpleLine/draw/", handler);
+
                         }
-                        
 
                         $compile(ele.find(".module-modal-wrapper").attr("gauge-config", "module.configuration"))(scope);
-
-                        Loriini.attachHandler(scope.device, "/plotter/draw/", scope.module._id, handler);
 
                     });
 
@@ -70,6 +81,10 @@ angular.module('hermesApp')
                         $timeout(function() {
                             scope.update(p_module);
                         }, 300);
+                    }
+
+                    var _attachLorini = function( p_rest, p_handler){
+                        Loriini.attachHandler(scope.device, p_rest, scope.module._id, p_handler);
                     }
 
                 }

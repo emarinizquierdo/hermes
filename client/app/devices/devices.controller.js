@@ -22,8 +22,11 @@ angular.module('hermesApp')
 
             Device.delete({
                 id: p_device._id
+            }, function(){
+                Loriini.devices = Device.query();
+            }, function(){
+
             });
-            Loriini.devices = Device.query();
 
         }
 

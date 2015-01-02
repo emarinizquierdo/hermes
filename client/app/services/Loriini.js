@@ -20,6 +20,8 @@ angular.module('hermesApp')
 
             unsecureClient.subscribe('/sloriini/status/' + p_device.clientID + '/' + p_device.secret);
 
+            if(!p_device.handlers) { p_device.handlers = {}; }
+            
             p_device.handlers['/sloriini/status/' + p_device.clientID + '/' + p_device.secret] = _statusDaemon;
 
             unsecureClient.on('message', function(topic, message) {

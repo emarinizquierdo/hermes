@@ -74,19 +74,18 @@ exports.update = function(req, res) {
 
 // Deletes a module from the DB.
 exports.destroy = function(req, res) {
-    Module.findById(req.params.id, function(err, module) {
+    var userId = req.user._id;
+    Module.findOneAndRemove({
+        _id: req.params.id,
+        userId: userId
+    }, function(err, module) {
         if (err) {
             return handleError(res, err);
         }
         if (!module) {
             return res.send(404);
         }
-        module.remove(function(err) {
-            if (err) {
-                return handleError(res, err);
-            }
-            return res.send(204);
-        });
+        return res.send(204);
     });
 };
 

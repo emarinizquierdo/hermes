@@ -246,6 +246,14 @@ angular.module('hermesApp')
             };
         }
 
+        this.handler = function(p_data){
+            
+            var _data = JSON.parse(p_data);
+
+            self.redraw(_data.value);
+
+        };
+
         angular.element($window).bind('resize', function() {
             
             configuration.size = p_ele.width() - 10;
@@ -257,6 +265,7 @@ angular.module('hermesApp')
 
         // initialization
         this.configure(configuration);
+        this.render();
 
     }
 })

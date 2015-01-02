@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('hermesApp')
-    .controller('DeviceCtrl', function($scope, $routeParams, $http, $location, $timeout, Loriini, Module) {
+    .controller('DeviceCtrl', function($scope, $routeParams, $http, $location, $timeout, Loriini, Module, Modules) {
 
         var STATUS_DAEMON_TIMESTAMP = 6000;
 
         $scope.device = {};
         $scope.modules = [];
+        $scope.availableModules = Modules.availables;
 
         function _init() {
 
@@ -35,10 +36,10 @@ angular.module('hermesApp')
             }, function(p_error) {});
         };
 
-        $scope.addModule = function() {
+        $scope.addModule = function( p_name ) {
 
             var _moduleSeed = {
-                moduleDirectiveName: "gauge",
+                moduleDirectiveName: p_name || "gauge",
                 configuration: "{}"
             };
 
@@ -78,6 +79,17 @@ angular.module('hermesApp')
                 });
             }
         };
+
+        $scope.closeModal = function(p_module_name) {
+
+            $('#add-module-modal').modal('hide');
+
+            $timeout(function() {
+                
+                $scope.addModule( p_module_name);
+
+            }, 300);
+        }
 
         _init();
 

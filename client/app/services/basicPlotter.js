@@ -3,6 +3,8 @@ angular.module('hermesApp')
 
         return function(p_ele, configuration) {
 
+            var self = this; // for internal d3 functions
+
             var renderTimeout;
             var margin = parseInt(configuration.margin) || 20,
                 barHeight = parseInt(configuration.barHeight) || 20,
@@ -38,11 +40,6 @@ angular.module('hermesApp')
                         .data(data)
                         .enter()
                         .append('rect')
-                        .on('click', function(d, i) {
-                            return this.onClick({
-                                item: d
-                            });
-                        })
                         .attr('height', barHeight)
                         .attr('width', 140)
                         .attr('x', Math.round(margin / 2))
@@ -71,11 +68,16 @@ angular.module('hermesApp')
                         });
                 }, 200);
 
-                
+            };
 
-            }
-            this.render([{name: "Greg", score: 98},{name: "Ari", score: 96},
-                    {name: 'Q', score: 75},{name: "Loser", score: 48}]);
+            this.handler = function(p_data){
+                var _data = JSON.parse(p_data);
+
+                self.render(_data);
+
+            };
+
+            this.render([{"name": "Greg", "score": 98},{"name": "Ari", "score": 96},{"name": "Q", "score": 75},{"name": "Loser", "score": 48}]);
         }
     })
     .directive('basicPlotterConfig', [

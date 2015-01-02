@@ -58,13 +58,10 @@ exports.update = function(req, res) {
 // Deletes a device from the DB.
 exports.destroy = function(req, res) {
   var userId = req.user._id;
-  Device.find({ _id : req.params.id, userId : userId}, function (err, device) {
+  Device.findOneAndRemove({ _id : req.params.id, userId : userId}, function (err, device) {
     if(err) { return handleError(res, err); }
     if(!device) { return res.send(404); }
-    device.remove(function(err) {
-      if(err) { return handleError(res, err); }
-      return res.send(204);
-    });
+    return res.send(204);
   });
 };
 
