@@ -5,79 +5,152 @@ angular.module('hermesApp')
 
             var self = this; // for internal d3 functions
 
-            var renderTimeout;
-            var margin = parseInt(configuration.margin) || 20,
-                barHeight = parseInt(configuration.barHeight) || 20,
-                barPadding = parseInt(configuration.barPadding) || 5;
+            var margin = {
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 30
+                },
+                labels,
+                w = p_ele.find("#module-wrapper-d3").width() - margin.left - margin.right,
+                h = p_ele.find("#module-wrapper-d3").height() - margin.top - margin.bottom,
+                svg,
+                xScale,
+                yScale,
+                color = d3.scale.category20()
+                render = false;
 
-            var svg = d3.select(p_ele.find("#module-wrapper-d3")[0])
-                .append('svg')
-                .style('width', '100%');
+            //Dummy data:
+            //[{"label": "Greg", "value": 18},{"label": "Ari", "value": 96},{"label": "Q", "value": 15},{"label": "Loser", "value": 48}]
 
-            $window.onresize = function() {
-                scope.$apply();
-            };
+            var _init = function(){
 
-            this.render = function(data) {
-                svg.selectAll('*').remove();
+                var fontSize = Math.round(w / 9);
 
-                if (!data) return;
-                if (renderTimeout) clearTimeout(renderTimeout);
+                //Create SVG element
+                svg = d3.select(p_ele.find("#module-wrapper-d3")[0])
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
 
-                renderTimeout = $timeout(function() {
-                    var width = d3.select(p_ele[0])[0][0].offsetWidth - margin,
-                        height = data.length * (barHeight + barPadding),
-                        color = d3.scale.category20(),
-                        xScale = d3.scale.linear()
-                        .domain([0, d3.max(data, function(d) {
-                            return d.score;
-                        })])
-                        .range([0, width]);
+                svg.append("svg:text")
+                    .attr("x", w / 2 + margin.right)
+                    .attr("y", "5" )
+                    .attr("dy", fontSize / 2)
+                    .attr("text-anchor", "middle")
+                    .text("temperatura")
+                    .style("font-size", "14px")
+                    .style("fill", "#333")
+                    .style("stroke-width", "2px");
 
-                    svg.attr('height', height);
+                h -= 40;
 
-                    svg.selectAll('rect')
-                        .data(data)
-                        .enter()
-                        .append('rect')
-                        .attr('height', barHeight)
-                        .attr('width', 140)
-                        .attr('x', Math.round(margin / 2))
-                        .attr('y', function(d, i) {
-                            return i * (barHeight + barPadding);
+            }
+
+            var _initiateData = function( p_dataset ) {
+
+                var dataset = p_dataset;
+                
+                //Create bars
+                svg.selectAll("rect")
+                    .data(dataset)
+                    .enter()
+                    .append("rect")
+                    .transition()
+                    .attr("x", function(d, i) {
+                        return xScale(i);
+                    })
+                    .attr("y", function(d) {
+                        return h - yScale(d.value) + 30;
+                    })
+                    .attr("width", xScale.rangeBand())
+                    .attr("height", function(d) {
+                        return yScale(d.value);
+                    })
+                    .attr("fill", function(d) {
+                        return color(d.value);
+                    });
+
+                //Create labels
+                labels  = svg.selectAll("text")
+                    .data(dataset)
+                    .enter()
+                    .append("text")
+                    .text(function(d) {
+                        return d.label + " (" + d.value + ")";
+                    })
+                    .attr("text-anchor", "middle")
+                    .attr("x", function(d, i) {
+                        return xScale(i) + xScale.rangeBand() / 2;
+                    })
+                    .attr("y", function(d) {
+                        return h - yScale(d.value) + 30;
+                    })
+                    .attr("font-family", "sans-serif")
+                    .attr("font-size", "11px");
+
+                render = true;
+
+            }
+
+            this.render = function(p_dataset) {
+
+                var dataset = p_dataset;
+
+
+                xScale = d3.scale.ordinal()
+                    .domain(d3.range(dataset.length))
+                    .rangeRoundBands([0, w], 0.05);
+
+                yScale = d3.scale.linear()
+                    .domain([0, d3.max(dataset, function(d) {
+                        return d.value;
+                    })])
+                    .range([0, h]);
+
+                if (!render) {
+                    _initiateData(dataset);
+                } else {
+
+                    //Update all rects
+                    svg.selectAll("rect")
+                        .data(dataset)
+                        .transition() // <-- This makes it a smooth transition!
+                        .attr("y", function(d) {
+                            return h - yScale(d.value) + 30;
                         })
-                        .attr('fill', function(d) {
-                            return color(d.score);
+                        .attr("height", function(d) {
+                            return yScale(d.value);
                         })
-                        .transition()
-                        .duration(1000)
-                        .attr('width', function(d) {
-                            return xScale(d.score);
+                        .attr("fill", function(d) {
+                            return color(d.value);
                         });
-                    svg.selectAll('text')
-                        .data(data)
-                        .enter()
-                        .append('text')
-                        .attr('fill', '#fff')
-                        .attr('y', function(d, i) {
-                            return i * (barHeight + barPadding) + 15;
-                        })
-                        .attr('x', 15)
+
+                    //Update all labels
+                    labels
+                        .data(dataset)
                         .text(function(d) {
-                            return d.name + " (scored: " + d.score + ")";
+                            return d.label + " (" + d.value + ")";
+                        })
+                        .attr("x", function(d, i) {
+                            return xScale(i) + xScale.rangeBand() / 2;
+                        })
+                        .attr("y", function(d) {
+                            return h - yScale(d.value) + 30;
                         });
-                }, 200);
+                }
 
             };
 
-            this.handler = function(p_data){
+            this.handler = function(p_data) {
                 var _data = JSON.parse(p_data);
 
                 self.render(_data);
 
             };
 
-            this.render([{"name": "Greg", "score": 98},{"name": "Ari", "score": 96},{"name": "Q", "score": 75},{"name": "Loser", "score": 48}]);
+            _init();
+
         }
     })
     .directive('basicPlotterConfig', [
