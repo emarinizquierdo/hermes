@@ -3,8 +3,8 @@ angular.module('hermesApp')
 
     return function(p_ele, configuration) {
 
-        var n = 40,
-            random = d3.random.normal(0, .2),
+        var n = 100,
+            random = d3.random.normal(0, 0),
             data = d3.range(n).map(random);
 
         var margin = {
@@ -21,7 +21,7 @@ angular.module('hermesApp')
             .range([0, width]);
 
         var y = d3.scale.linear()
-            .domain([-1, 1])
+            .domain([-100, 100])
             .range([height, 0]);
 
         var line = d3.svg.line()
@@ -72,7 +72,7 @@ angular.module('hermesApp')
                 .attr("d", line)
                 .attr("transform", null)
                 .transition()
-                .duration(500)
+                .duration(300)
                 .ease("linear")
                 .attr("transform", "translate(" + x(0) + ",0)");
 

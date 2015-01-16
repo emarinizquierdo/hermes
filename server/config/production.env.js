@@ -6,7 +6,7 @@
 // You will need to set these on the server you deploy to.
 
 module.exports = {
-  DOMAIN: 'http://hermes-iot.ddns.net',
+  DOMAIN: 'http://hermesiot.ddns.net',
   SESSION_SECRET: "hermes-secret",
 
   GOOGLE_ID: '536470903952-uit2nvn0qk34ijn26dalnb307jm3i0ii.apps.googleusercontent.com',
